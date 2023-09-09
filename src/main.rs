@@ -25,6 +25,9 @@ fn main() {
 
     // Adding Useful Functionality with Derived Traits
     debug_rect();
+
+    // Implementation of `Rectangle` struct with `area` method
+    area_method();
 }
 
 /// # Simple Area function
@@ -142,4 +145,52 @@ fn debug_rect() {
     // the `dbg!` macro prints the file and line number + an owned & returned
     // expression to `stderr`
     dbg!(&rect1);
+}
+
+/// # Method Syntax
+/// 
+/// Methods are similar to functions: we declare them with the fn keyword and a
+/// name, they can have parameters and a return value, and they contain some
+/// code that’s run when the method is called from somewhere else. Unlike
+/// functions, methods are defined within the context of a struct (or an enum
+/// or a trait object, which we cover in [Chapter 6][1] and [Chapter 17][2],
+/// respectively), and their first parameter is always self, which represents
+/// the instance of the struct the method is being called on.
+///
+/// ## Defining Methods
+///
+/// Let’s change the area function that has a Rectangle instance as a parameter
+/// and instead make an area method defined on the Rectangle struct, as shown
+/// in `area_method()`
+/// 
+/// [1]: https://doc.rust-lang.org/book/ch06-00-enums.html
+/// [2]: https://doc.rust-lang.org/book/ch17-02-trait-objects.html
+fn area_method() {
+    let rect1 = RectangleMethod {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The area of the rectangle is {} square pixels.",
+        rect1.area()
+    );
+}
+
+/// # Implementation of `Rectangle` struct with `area` method
+/// 
+/// Same as before, we define a struct with `width` and `height` attributes
+#[derive(Debug)]
+struct RectangleMethod {
+    width: u32,
+    height: u32,
+}
+
+/// # Implementation of `Rectangle` with `area` method
+/// 
+/// This time, we also implement an `area()` method to calculate area.
+impl RectangleMethod {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
 }
