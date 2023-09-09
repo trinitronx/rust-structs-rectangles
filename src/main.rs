@@ -22,6 +22,9 @@ fn main() {
 
     // Refactoring with Structs: Adding More Meaning
     structs();
+
+    // Adding Useful Functionality with Derived Traits
+    debug_rect();
 }
 
 /// # Simple Area function
@@ -52,7 +55,7 @@ fn area_tuples(dimensions: (u32, u32)) -> u32 {
 
 // Refactoring with Structs: Adding More Meaning
 /// # Rectangle struct to group `height` and `width` data
-/// 
+///
 /// We use structs to add meaning by labeling the data.
 /// We can transform the tuple we’re using into a struct with a name for
 /// the whole as well as names for the parts, as shown this struct.
@@ -77,8 +80,66 @@ fn structs() {
 }
 
 /// # Calculate area of a rectangle with Structs
-/// 
+///
 /// Refactored area function using structs
 fn area_structs(rectangle: &Rectangle) -> u32 {
     rectangle.width * rectangle.height
+}
+
+/// # Adding Useful Functionality with Derived Traits
+///
+/// An example of using derived trait `Debug` to print
+/// the contents of a struct: `DebugRectangle`
+#[derive(Debug)]
+struct DebugRectangle {
+    width: u32,
+    height: u32,
+}
+
+/// # Adding Useful Functionality with Derived Traits
+///
+/// It’d be useful to be able to print an instance of `Rectangle` while we’re
+/// debugging our program and see the values for all its fields.
+///
+/// The `println!` macro and `{}` format specifier won't work yet, because our
+/// struct did not implement the `Display` trait.
+///
+/// Putting the specifier `:?` inside the curly brackets tells `println!` we
+/// want to use an output format called `Debug`. The `Debug` trait enables us
+/// to print our struct in a way that is useful for developers so we can see
+/// its value while we’re debugging our code.
+///
+/// Rust includes functionality to print out debugging information, but we have
+/// to explicitly opt in to make that functionality available for our struct.
+/// To do that, we add the outer attribute `#[derive(Debug)]` just before the
+/// struct definition, as shown in `DebugRectangle`.
+///
+/// When we have larger structs, it’s useful to have output that’s a bit easier
+/// to read; in those cases, we can use `{:#?}` instead of `{:?}` in the
+/// `println!` string. In this example, using the `{:#?}` style
+/// will pretty-print the `DebugRectangle` struct.
+///
+/// The `dbg!` macro, which takes ownership of an expression
+/// (as opposed to `println!`, which takes a reference),
+/// prints the file and line number of where that `dbg!` macro call occurs in
+/// your code along with the resultant value of that expression, and returns
+/// ownership of the value.
+fn debug_rect() {
+    let rect1 = DebugRectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect1 is {:?}", rect1);
+    println!("Pretty-printed `rect1` is {:#?}", rect1);
+
+    let scale = 2;
+    let rect2 = Rectangle {
+        width: dbg!(30 * scale), // this expression gets printed, then returned
+        height: 50,
+    };
+
+    // the `dbg!` macro prints the file and line number + an owned & returned
+    // expression to `stderr`
+    dbg!(&rect1);
 }
