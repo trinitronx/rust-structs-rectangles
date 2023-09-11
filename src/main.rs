@@ -28,6 +28,9 @@ fn main() {
 
     // Implementation of `Rectangle` struct with `area` method
     area_method();
+
+    // Implementation of `Rectangle` struct with `width` "is set?" method
+    width_is_set_method();
 }
 
 /// # Simple Area function
@@ -192,5 +195,67 @@ struct RectangleMethod {
 impl RectangleMethod {
     fn area(&self) -> u32 {
         self.width * self.height
+    }
+}
+
+/// # Method Syntax - Methods & Fields w/same name
+/// 
+/// Note that we can choose to give a method the same name as one of the
+/// struct’s fields. For example, we can define a method on Rectangle that is
+/// also named `width`
+/// 
+/// ## Defining Methods - `&self` shorthand 
+///
+/// `&self` is actually short for `self: &Self`. Within an impl block, the type
+/// `Self` is an alias for the type that the `impl` block is for. Methods must
+/// have a parameter named `self` of type `Self` for their first parameter, so
+/// Rust lets you abbreviate this with only the name `self` in the first
+/// parameter spot. Note that we still need to use the `&` in front of the
+/// `self` shorthand to indicate that this method borrows the `Self` instance,
+/// just as we did in rectangle: `&Rectangle`. Methods can take ownership of
+/// `self`, borrow `self` immutably, as we’ve done here, or borrow
+/// `self` mutably, just as they can any other parameter.
+/// 
+/// We chose `&self` here for the same reason we used `&Rectangle` in the
+/// function version: we don’t want to take ownership, and we just want to read
+/// the data in the struct, not write to it. If we wanted to change the
+/// instance that we’ve called the method on as part of what the method does,
+/// we’d use `&mut self` as the first parameter. Having a method that takes
+/// ownership of the instance by using just `self` as the first parameter
+/// is rare; this technique is usually used when the method transforms `self`
+/// into something else and you want to prevent the caller from using the
+/// original instance after the transformation.
+/// 
+/// When we follow `rect1.width` with parentheses, (e.g. `width()`) Rust knows
+/// we mean the method `width`. When we don’t use parentheses, Rust knows we
+/// mean the field `width`.
+fn width_is_set_method() {
+    let rect1 = RectangleMethodWidth {
+        width: 30,
+        height: 50,
+    };
+
+    println!(
+        "The width of the rectangle is set? {}",
+        rect1.width()
+    );
+}
+
+/// # Implementation of `Rectangle` struct with `width` method
+/// 
+/// Same as before, we define a struct with `width` and `height` attributes
+#[derive(Debug)]
+struct RectangleMethodWidth {
+    width: u32,
+    height: u32,
+}
+
+/// # Implementation of `Rectangle` with `width` method
+/// 
+/// This time, we implement an `width()` method to return `true` when `width`
+/// is nonzero, and `false` when `width` is `0`.
+impl RectangleMethodWidth {
+    fn width(&self) -> bool {
+        if self.width > 0 { true } else { false }
     }
 }
