@@ -31,6 +31,9 @@ fn main() {
 
     // Implementation of `Rectangle` struct with `width` "is set?" method
     width_is_set_method();
+
+    // Methods with More Parameters
+    methods_with_more_parameters();
 }
 
 /// # Simple Area function
@@ -257,5 +260,59 @@ struct RectangleMethodWidth {
 impl RectangleMethodWidth {
     fn width(&self) -> bool {
         if self.width > 0 { true } else { false }
+    }
+}
+
+/// ## Methods with More Parameters
+/// 
+/// Let’s practice using methods by implementing a second method on the
+/// `Rectangle` struct. This time we want an instance of `Rectangle` to take
+/// another instance of `Rectangle` and return `true` if the second `Rectangle`
+/// can fit completely within `self` (the first `Rectangle`); otherwise, it
+/// should return `false`. That is, once we’ve defined the `can_hold` method,
+/// we want to be able to write the program shown in
+/// `methods_with_more_parameters()`.
+fn methods_with_more_parameters() {
+let rect1 = RectangleCanHold {
+    width: 30,
+    height: 50,
+};
+let rect2 = Rectangle {
+    width: 10,
+    height: 40,
+};
+let rect3 = Rectangle {
+    width: 60,
+    height: 45,
+};
+
+println!("Can rect1 hold rect2? {}", rect1.can_hold(&rect2));
+println!("Can rect1 hold rect3? {}", rect1.can_hold(&rect3));
+println!("Area of rect1 {}", rect1.area());
+}
+/// # A `Rectangle` struct with `can_hold` method
+/// 
+/// Same as before, we define a struct with `width` and `height` attributes
+#[derive(Debug)]
+struct RectangleCanHold {
+    width: u32,
+    height: u32,
+}
+
+/// # Implementation of `Rectangle` with `can_hold` method
+/// 
+/// This time, we implement an `can_hold()` method to return `true` when `self`
+/// Rectangle can hold `other`, and `false` when it can't.
+impl RectangleCanHold {
+    /// Calculates and returns the area of this rectangle
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+
+    /// Compares this Rectangle with another,
+    /// and returns `true` if this rectangle is large enough to completely
+    /// enclose the `other` `Rectangle`
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
     }
 }
