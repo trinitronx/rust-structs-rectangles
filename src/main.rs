@@ -34,6 +34,9 @@ fn main() {
 
     // Methods with More Parameters
     methods_with_more_parameters();
+
+    // Associated Functions
+    associated_functions();
 }
 
 /// # Simple Area function
@@ -312,6 +315,66 @@ impl RectangleCanHold {
     /// Compares this Rectangle with another,
     /// and returns `true` if this rectangle is large enough to completely
     /// enclose the `other` `Rectangle`
+    fn can_hold(&self, other: &Rectangle) -> bool {
+        self.width > other.width && self.height > other.height
+    }
+}
+
+/// # Associated Functions
+/// 
+/// All functions defined within an `impl` block are called
+/// associated functions because they’re associated with the type named after
+/// the `impl`. We can define associated functions that don’t have `self` as
+/// their first parameter (and thus are not methods) because they don’t need an
+/// instance of the type to work with. We’ve already used one function like
+/// this: the `String::from` function that’s defined on the `String` type.
+/// 
+/// Associated functions that aren’t methods are often used for constructors
+/// that will return a new instance of the struct. These are often called new,
+/// but new isn’t a special name and isn’t built into the language.
+/// For example, we could choose to provide an associated function named square
+/// that would have one dimension parameter and use that as both `width` and
+/// `height`, thus making it easier to create a square `Rectangle` rather than
+/// having to specify the same value twice.
+fn associated_functions() {
+    let sq = RectangleAssociatedFunction::square(3);
+    println!("The square `sq` has width: {}, and height: {}", sq.width, sq.height);   
+}
+/// # Implementation of `Rectangle` with `square` Associated function
+/// 
+/// Same as before, we define a struct with `width` and `height` attributes
+struct RectangleAssociatedFunction {
+    width: u32,
+    height: u32
+}
+/// # Implementation of `Rectangle` with `square` Associated function
+/// 
+/// `Rectangle` with an associated function named `square` that would have one
+/// dimension parameter and use that as both `width` and `height`, thus making
+/// it easier to create a square `Rectangle` rather than having to specify the
+/// same value twice.
+impl RectangleAssociatedFunction {
+    fn square(size: u32) -> Self {
+        Self {
+            width: size,
+            height: size,
+        }
+    }
+}
+
+
+/// # Multiple `impl` Blocks
+/// 
+/// Each struct is allowed to have multiple `impl` blocks. For example,
+/// the `impl` for `RectangleCanHold` is equivalent to the following,
+/// which has each method in its own `impl` block.
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+/// # Multiple `impl` Blocks - block 2 example
+impl Rectangle {
     fn can_hold(&self, other: &Rectangle) -> bool {
         self.width > other.width && self.height > other.height
     }
